@@ -1,7 +1,7 @@
 use anyhow::Error;
 use rand::{Rng, RngCore};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Neuron {
     weights: Vec<f32>,
     bias: f32,

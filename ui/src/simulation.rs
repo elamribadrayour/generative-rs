@@ -23,4 +23,10 @@ impl Simulation {
     pub fn process_collisions(&mut self) {
         self.world.process_collisions();
     }
+
+    pub fn process_brains(&mut self) {
+        self.world.process_brains();
+    }
+
+    pub fn evolve(&mut self) {}
 }
