@@ -1,31 +1,27 @@
 mod animal;
+mod eye;
 mod food;
+mod fov;
 mod simulation;
 mod world;
 
 extern crate nannou;
 use nannou::prelude::*;
 use simulation::Simulation;
-// use genetic_algorithm::{selection, crossover, mutation, Algorithm};
 
 fn main() {
     nannou::app(model).update(update).simple_window(view).run();
 }
 
 struct Model {
+    iteration: u32,
     simulation: Simulation,
-    // algorithm: Algorithm<selection::RouletteWheel>,
 }
 
 fn model(_app: &App) -> Model {
     let simulation = Simulation::random();
-    // let algorithm = Algorithm::new(
-    //     selection::RouletteWheel,
-    //     crossover::Uniform,
-    //     mutation::Gaussian::new(0.0, 0.1),
-    // );
     Model {
-        // algorithm,
+        iteration: 0,
         simulation,
     }
 }
@@ -35,7 +31,10 @@ fn update(_app: &App, _model: &mut Model, _update: Update) {
         animal.set_position();
     });
 
+    _model.iteration += 1;
     _model.simulation.process_collisions();
+    _model.simulation.process_brains();
+    _model.simulation.evolve();
 }
 
 fn view(app: &App, _model: &Model, frame: Frame) {
@@ -51,6 +50,12 @@ fn view(app: &App, _model: &Model, frame: Frame) {
             .x_y(object.x, object.y)
             .radius(10.0)
             .color(color);
+
+        let points = animal.get_fov(win);
+        draw.polyline()
+            .weight(2.0) // Line thickness
+            .points(points)
+            .color(PINK);
     });
 
     world.get_food().iter().for_each(|food| {

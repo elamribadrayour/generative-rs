@@ -2,7 +2,7 @@ use crate::neuron::Neuron;
 use anyhow::Error;
 use rand::RngCore;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Layer {
     neurons: Vec<Neuron>,
 }

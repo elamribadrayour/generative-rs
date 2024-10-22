@@ -3,7 +3,7 @@ use crate::topology::Topology;
 use anyhow::Error;
 use rand::RngCore;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Network {
     layers: Vec<Layer>,
 }

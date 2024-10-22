@@ -28,23 +28,26 @@ impl World {
     }
 
     pub fn process_collisions(&mut self) {
+        let food_positions: Vec<_> = self.food.iter().map(|f| f.get_position()).collect();
         let mut to_remove = Vec::new();
-        for animal in self.get_animals().iter() {
-            for food in self.get_food().iter() {
-                // Calculate distance
-                let distance = animal.get_position().distance(food.get_position());
-                if approx::abs_diff_eq!(distance, 0.0, epsilon = 0.01) {
-                    to_remove.push(food);
-                }
-            }
+        for animal in self.iter_animal_mut() {
+            let to_remove_new = animal.process_collisions(food_positions.clone());
+            to_remove.extend(to_remove_new);
         }
 
         let food_filtered: Vec<Food> = self
             .get_food()
             .iter()
-            .filter(|f| !to_remove.contains(f))
+            .filter(|f| !to_remove.contains(&f.get_position()))
             .cloned()
             .collect();
         self.food = food_filtered;
+    }
+
+    pub fn process_brains(&mut self) {
+        let food_positions: Vec<_> = self.food.iter().map(|f| f.get_position()).collect();
+        for animal in &mut self.iter_animal_mut() {
+            animal.process_brain(&food_positions);
+        }
     }
 }

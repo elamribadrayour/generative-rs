@@ -7,3 +7,5 @@ pub mod selection;
 pub mod test_individual;
 
 pub use algorithm::Algorithm;
+pub use chromosome::Chromosome;
+pub use individual::Individual;
